@@ -13,11 +13,10 @@ import android.widget.EditText;
 import android.content.DialogInterface.OnCancelListener;
 import com.juny78.todo.db.TaskDBHelper;
 import android.database.Cursor;
-import android.widget.SimpleCursorAdapter;
 import android.widget.ListView;
 import android.view.View;
 import android.widget.TextView;
-import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
@@ -46,16 +45,9 @@ public class MainActivity extends ActionBarActivity {
                                  allColumns,
                                  null, null, null, null, null);
 
-        SimpleCursorAdapter listAdapter = new SimpleCursorAdapter(
-                this,
-                R.layout.task_view,
-                cursor,
-                new String[] { TaskDBHelper.COLUMN_TASK },
-                new int[] { R.id.taskTextView },
-                0);
-
+        TaskListAdapter adapter = new TaskListAdapter(this, cursor, 0);
         ListView listView = (ListView) findViewById(R.id.list);
-        listView.setAdapter(listAdapter);
+        listView.setAdapter(adapter);
     }
 
 
@@ -89,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
 
                         values.clear();
                         values.put(TaskDBHelper.COLUMN_TASK, task);
-                        values.put(TaskDBHelper.COLUMN_STATUS, "pending");
+                        values.put(TaskDBHelper.COLUMN_STATUS, "open");
 
                         db.insertWithOnConflict(TaskDBHelper.TABLE,
                                                 null,
@@ -111,21 +103,23 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onDoneButtonClick(View view) {
-        Button doneButton = (Button) view;
-        View parentView = (View) doneButton.getParent();
+        Button button = (Button) view;
+        String status = button.getText().toString().equalsIgnoreCase("DONE") ? "done" : "open";
+
+        View parentView = (View) button.getParent();
         TextView textView = (TextView) parentView.findViewById(R.id.taskTextView);
         String task = textView.getText().toString();
 
-        // flag the task as done by changing the text
-        textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        doneButton.setText("Open");
-
         // Update the status of the task in DB
-        String sqlUpdate = String.format("UPDATE %s SET %s = '%s' WHERE %s = '%s'",
-                                         TaskDBHelper.TABLE,
-                                         TaskDBHelper.COLUMN_STATUS, "done",
-                                         TaskDBHelper.COLUMN_TASK, task);
+        String where = String.format("%s = '%s'", TaskDBHelper.COLUMN_TASK, task);
+
+        ContentValues values = new ContentValues();
+        values.clear();
+        values.put(TaskDBHelper.COLUMN_STATUS, status);
+
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL(sqlUpdate);
+        db.update(TaskDBHelper.TABLE, values, where, null);
+
+        updateTaskList();
     }
 }
