@@ -16,7 +16,6 @@ import android.database.Cursor;
 import android.widget.ListView;
 import android.view.View;
 import android.widget.TextView;
-import android.graphics.drawable.Drawable;
 import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
@@ -55,13 +54,13 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.actionAddTask:
+            case R.id.action_add_task:
                 Log.d("MainActivity","Add a new task");
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
