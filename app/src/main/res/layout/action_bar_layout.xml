@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:gravity="fill_horizontal"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_alignParentLeft="true"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/action_bar_button_date"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="onDateButtonClick"
+            style="@android:style/Widget.DeviceDefault.Light.Spinner"
+            android:text="2015-01-11"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:visibility="visible"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/action_bar_button_add"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:onClick="onAddButtonClick"
+            android:text="Add"
+            android:textStyle="bold" />
+    </LinearLayout>
+</RelativeLayout>
